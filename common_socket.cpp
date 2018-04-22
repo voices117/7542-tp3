@@ -48,9 +48,9 @@ TP3::Socket::Socket(int fd) {
  * @brief Binds the socket to the given service (or port number as a string).
  * The socket will be set to passive mode to work as a server.
  *
- * @param service Service/port to bind the socket to.
+ * @param port Service/port to bind the socket to.
  */
-void TP3::Socket::bind(const std::string& service) {
+void TP3::Socket::bind(const std::string& port) {
     /* sets the hints */
     struct addrinfo hints;
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -59,7 +59,7 @@ void TP3::Socket::bind(const std::string& service) {
     hints.ai_flags = AI_PASSIVE;
 
     struct addrinfo* ptr;
-    int rv = getaddrinfo(NULL, service.c_str(), &hints, &ptr);
+    int rv = getaddrinfo(NULL, port.c_str(), &hints, &ptr);
     if (rv != 0) {
         freeaddrinfo(ptr);
         throw TP3::Error{"getaddrinfo: %s", gai_strerror(rv)};
@@ -87,10 +87,9 @@ void TP3::Socket::bind(const std::string& service) {
  * service/port.
  *
  * @param address Address to connect to.
- * @param service The service (or port as a string).
+ * @param port The service (or port as a string).
  */
-void TP3::Socket::connect(const std::string& address,
-                          const std::string& service) {
+void TP3::Socket::connect(const std::string& address, const std::string& port) {
     /* sets the hints for the required protocol */
     struct addrinfo hints;
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -100,7 +99,7 @@ void TP3::Socket::connect(const std::string& address,
 
     /* gets the address info */
     struct addrinfo* result;
-    int rv = getaddrinfo(address.c_str(), service.c_str(), &hints, &result);
+    int rv = getaddrinfo(address.c_str(), port.c_str(), &hints, &result);
     if (rv != 0) {
         throw TP3::Error{"getaddrinfo: %s", gai_strerror(rv)};
     }
@@ -176,6 +175,17 @@ void TP3::Socket::read(void* data, std::size_t size) {
 /**
  * @brief Insertion operator for the socket class.
  *
+ * @param c Unsigned byte to write (in network order).
+ * @return Socket.
+ */
+TP3::Socket& TP3::Socket::operator<<(uint8_t c) {
+    this->write(&c, sizeof(c));
+    return *this;
+}
+
+/**
+ * @brief Insertion operator for the socket class.
+ *
  * @param i Unsigned integer to write (in network order).
  * @return Socket.
  */
@@ -216,6 +226,18 @@ TP3::Socket& TP3::Socket::operator<<(const char* s) {
  */
 TP3::Socket& TP3::Socket::operator<<(const std::string& s) {
     return *this << s.c_str();
+}
+
+/**
+ * @brief Extraction operator for the socket class.
+ *
+ * @param c To reference to the byte where the read value is written
+ * (converted to host order).
+ * @return Socket.
+ */
+TP3::Socket& TP3::Socket::operator>>(uint8_t& c) {
+    this->read(&c, sizeof(c));
+    return *this;
 }
 
 /**

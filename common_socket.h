@@ -16,20 +16,22 @@ class Socket {
     void read(void* data, std::size_t size);
 
     /** Server */
-    void bind(const std::string& service);
+    void bind(const std::string& port);
     void listen();
     Socket accept();
 
     /** Client */
-    void connect(const std::string& address, const std::string& service);
+    void connect(const std::string& address, const std::string& port);
 
     /** operators */
     Socket& operator=(Socket& other) = delete;
 
+    Socket& operator<<(uint8_t c);
     Socket& operator<<(uint32_t i);
     Socket& operator<<(const char* s);
     Socket& operator<<(const std::string& s);
 
+    Socket& operator>>(uint8_t& c);
     Socket& operator>>(uint32_t& i);
     Socket& operator>>(std::string& s);
 
