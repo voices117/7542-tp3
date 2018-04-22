@@ -46,7 +46,6 @@ TP3::Socket::Socket(int fd) {
 
 /**
  * @brief Binds the socket to the given service (or port number as a string).
- * The socket will be set to passive mode to work as a server.
  *
  * @param port Service/port to bind the socket to.
  */
@@ -80,6 +79,15 @@ void TP3::Socket::bind(const std::string& port) {
     }
 
     freeaddrinfo(ptr);
+}
+
+/**
+ * @brief Sets a socket to passive mode.
+ */
+void TP3::Socket::listen() {
+    if (::listen(this->fd, 10) == -1) {
+        throw TP3::Error{"listen: %s", strerror(errno)};
+    }
 }
 
 /**
@@ -164,12 +172,14 @@ void TP3::Socket::write(const void* data, std::size_t size) {
  *
  * @param data Pointer to the output buffer.
  * @param size Bytes to read.
+ * @return Bytes written into the buffer.
  */
-void TP3::Socket::read(void* data, std::size_t size) {
+ssize_t TP3::Socket::read(void* data, std::size_t size) {
     ssize_t bytes_read = recv(this->fd, data, size, MSG_WAITALL);
     if (bytes_read < 0) {
         throw TP3::Error{"recv: %s", strerror(errno)};
     }
+    return bytes_read;
 }
 
 /**
@@ -236,7 +246,9 @@ TP3::Socket& TP3::Socket::operator<<(const std::string& s) {
  * @return Socket.
  */
 TP3::Socket& TP3::Socket::operator>>(uint8_t& c) {
-    this->read(&c, sizeof(c));
+    if (this->read(&c, sizeof(c)) != sizeof(c)) {
+        throw TP3::Error{"Error en la lectura de u8"};
+    }
     return *this;
 }
 
@@ -250,7 +262,9 @@ TP3::Socket& TP3::Socket::operator>>(uint8_t& c) {
 TP3::Socket& TP3::Socket::operator>>(uint32_t& i) {
     /* reads from the socket in network order */
     uint32_t tmp;
-    this->read(&tmp, sizeof(tmp));
+    if (this->read(&tmp, sizeof(tmp)) != sizeof(i)) {
+        throw TP3::Error{"Error en la lectura de u32"};
+    }
 
     /* converts to host order and sets the output */
     i = ntohl(tmp);
@@ -272,6 +286,8 @@ TP3::Socket& TP3::Socket::operator>>(std::string& s) {
     s.resize(len);
 
     /* gets the actual content */
-    this->read(&s.front(), len);
+    if (this->read(&s.front(), len) != len) {
+        throw TP3::Error{"Error en la lectura de string"};
+    }
     return *this;
 }

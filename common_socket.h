@@ -13,7 +13,7 @@ class Socket {
 
     /** IO */
     void write(const void* data, std::size_t size);
-    void read(void* data, std::size_t size);
+    ssize_t read(void* data, std::size_t size);
 
     /** Server */
     void bind(const std::string& port);
