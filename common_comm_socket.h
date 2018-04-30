@@ -14,6 +14,7 @@ class CommSocket : public Comm {
     /* overrides */
     virtual void write(const void* data, std::size_t size) override;
     virtual ssize_t read(void* data, std::size_t size) override;
+
     virtual Comm& operator<<(uint8_t c) override;
     virtual Comm& operator<<(Response r) override;
     virtual Comm& operator<<(uint32_t i) override;

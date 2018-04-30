@@ -15,10 +15,23 @@ IO::CommSocket::CommSocket(IO::Socket&& socket) : socket(std::move(socket)) {
 IO::CommSocket::~CommSocket() {
 }
 
+/**
+ * @brief Writes a chunk of bytes into the internal socket.
+ *
+ * @param data Pointer to the data buffer.s
+ * @param size Size of the input buffer.
+ */
 void IO::CommSocket::write(const void* data, std::size_t size) {
     this->socket.write(data, size);
 }
 
+/**
+ * @brief Reads a chunk of bytes from the internal socket.
+ *
+ * @param data Output buffer.
+ * @param size Bytes to read.
+ * @return ssize_t Bytes actually read or negative value in case of error.
+ */
 ssize_t IO::CommSocket::read(void* data, std::size_t size) {
     return this->socket.read(data, size);
 }

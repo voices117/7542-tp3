@@ -7,6 +7,11 @@
 Server::Versioner::Versioner() {
 }
 
+/**
+ * @brief Initializes a Versioner object from an index in the given file name.
+ *
+ * @param file_name The name of the index file.
+ */
 Server::Versioner::Versioner(const std::string& file_name)
     : index_file_name(file_name) {
     std::ifstream file{file_name};
