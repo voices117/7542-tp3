@@ -12,7 +12,7 @@ class TagIndex {
     TagIndex();
     ~TagIndex();
 
-    TagIndex& operator=(TagIndex& other) = delete;
+    void swap(TagIndex& l, TagIndex& r);
 
     const std::set<std::string>& get_hashes(const std::string& tag) const;
     void add(const std::string& tag, const std::set<std::string>& hashes);

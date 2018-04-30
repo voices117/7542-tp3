@@ -14,7 +14,7 @@ class FileIndex {
     FileIndex();
     ~FileIndex();
 
-    FileIndex& operator=(const FileIndex& other) = delete;
+    void swap(TP3::FileIndex& other);
 
     bool exists(const std::string& hash);
     void insert_file(const std::string& name, const std::string& hash);
@@ -25,12 +25,6 @@ class FileIndex {
     std::map<std::string, std::set<std::string>> hashes;
     /* maps the hash to a file */
     std::map<std::string, std::string> files;
-    /* mutex to protect concurrent access to this class */
-    std::mutex mutex;
-    std::condition_variable cv;
-
-    int readers{true};
-    int writers{true};
 };
 }  // namespace TP3
 

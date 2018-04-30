@@ -6,6 +6,16 @@ Server::TagIndex::TagIndex() {
 Server::TagIndex::~TagIndex() {
 }
 
+/**
+ * @brief Implements the swap for this class.
+ *
+ * @param l Left operand.
+ * @param r Right operand.
+ */
+void Server::TagIndex::swap(TagIndex& l, TagIndex& r) {
+    std::swap(l.hashes, r.hashes);
+}
+
 const std::set<std::string>& Server::TagIndex::get_hashes(
     const std::string& tag) const {
     try {

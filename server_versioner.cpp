@@ -7,6 +7,32 @@
 Server::Versioner::Versioner() {
 }
 
+Server::Versioner::Versioner(std::ifstream& file) {
+    /* reads the files */
+    while (file) {
+        std::string type, name, hash;
+
+        file >> type >> name;
+
+        if (!file) {
+            break;
+        }
+        if (type == "f") {
+            while (file && (file >> hash, hash != ";")) {
+                this->file_index.insert_file(name, hash);
+            }
+        } else if (type == "t") {
+            std::set<std::string> hashes;
+            while (file && (file >> hash, hash != ";")) {
+                hashes.insert(hash);
+            }
+            this->tag_index.add(name, hashes);
+        } else {
+            throw TP3::Error{"Unexpected type %s", type.c_str()};
+        }
+    }
+}
+
 Server::Versioner::~Versioner() {
 }
 

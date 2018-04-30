@@ -10,6 +10,8 @@ namespace Server {
 class Versioner {
    public:
     Versioner();
+    Versioner(Versioner&& other);
+    Versioner(std::ifstream& file);
     ~Versioner();
 
     Versioner& operator=(Versioner& other) = delete;

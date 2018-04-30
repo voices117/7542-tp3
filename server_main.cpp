@@ -3,8 +3,14 @@
 #include "server_versioner.h"
 
 int main(int argc, const char* argv[]) {
+    if (argc != 3) {
+        std::cout << "parametros invalidos" << std::endl;
+        return 0;
+    }
+
     try {
-        Server::Versioner versioner{};
+        std::ifstream file{argv[2]};
+        Server::Versioner versioner{file};
         Server::Server server{argv[1]};
 
         bool quit = false;
