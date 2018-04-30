@@ -9,7 +9,7 @@ IO::CommSocket::CommSocket(const std::string& address,
     this->socket.connect(address, service);
 }
 
-IO::CommSocket::CommSocket(TP3::Socket&& socket) : socket(std::move(socket)) {
+IO::CommSocket::CommSocket(IO::Socket&& socket) : socket(std::move(socket)) {
 }
 
 IO::CommSocket::~CommSocket() {
@@ -47,7 +47,7 @@ IO::Comm& IO::CommSocket::operator<<(IO::Response r) {
         case IO::Response::Error:
             return *this << static_cast<uint8_t>(0);
         default:
-            throw TP3::Error{"Unexpected response type"};
+            throw Error::Error{"Unexpected response type"};
     }
 
     return *this;
@@ -74,7 +74,7 @@ IO::Comm& IO::CommSocket::operator<<(uint32_t i) {
  */
 IO::Comm& IO::CommSocket::operator<<(std::size_t i) {
     if (i > __UINT32_MAX__) {
-        throw TP3::Error{"size_t demasiado grande"};
+        throw Error::Error{"size_t demasiado grande"};
     }
     return *this << static_cast<uint32_t>(i);
 }
@@ -143,7 +143,7 @@ IO::Comm& IO::CommSocket::operator>>(IO::Response& r) {
             r = IO::Response::Error;
             break;
         default:
-            throw TP3::Error{"Valor de respuesta invalido"};
+            throw Error::Error{"Valor de respuesta invalido"};
     }
 
     return *this;

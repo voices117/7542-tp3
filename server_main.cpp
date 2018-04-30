@@ -16,7 +16,7 @@ int main(int argc, const char* argv[]) {
         while (true) {
             server.handle_client(versioner);
         }
-    } catch (const TP3::Interrupted& e) {
+    } catch (const IO::Interrupted& e) {
         /* this exception means that the server must quit */
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;

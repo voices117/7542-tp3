@@ -15,7 +15,7 @@ class Versioner {
     ~Versioner();
 
     Versioner& operator=(Versioner& other) = delete;
-    void operator()(TP3::Socket&& client);
+    void operator()(IO::Socket&& client);
 
     void push(IO::Comm& comm);
     void pull(IO::Comm& comm);
@@ -24,7 +24,7 @@ class Versioner {
     void save(std::ofstream& file);
 
    private:
-    TP3::FileIndex file_index;
+    FileIndex file_index;
     TagIndex tag_index;
 
     std::mutex mutex;

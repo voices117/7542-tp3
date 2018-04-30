@@ -7,7 +7,7 @@
 #include "common_error.h"
 #include "common_socket.h"
 
-namespace TP3 {
+namespace Client {
 class Versioner {
    public:
     Versioner(IO::Comm& comm);
@@ -21,6 +21,6 @@ class Versioner {
     /** Internal socket used to communicate with the server. */
     IO::Comm& comm;
 };
-}  // namespace TP3
+}  // namespace Client
 
 #endif

@@ -8,7 +8,7 @@
 #include <string>
 #include "common_error.h"
 
-namespace TP3 {
+namespace Server {
 class FileIndex {
    public:
     using const_iterator =
@@ -35,6 +35,6 @@ class FileIndex {
     /* maps the hash to a file */
     std::map<std::string, std::string> files;
 };
-}  // namespace TP3
+}  // namespace Server
 
 #endif

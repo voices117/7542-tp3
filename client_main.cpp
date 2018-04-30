@@ -18,7 +18,7 @@ int main(int argc, const char* argv[]) {
 
     try {
         IO::CommSocket comm{ip, service};
-        TP3::Versioner v{comm};
+        Client::Versioner v{comm};
 
         /* selects the appropriate action from the command line arguments */
         if (action == "push" && argc == 6) {
@@ -32,7 +32,7 @@ int main(int argc, const char* argv[]) {
             }
             v.tag(argv[4], hashes);
         } else {
-            throw TP3::Error{"parametros invalidos"};
+            throw Error::Error{"parametros invalidos"};
         }
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;

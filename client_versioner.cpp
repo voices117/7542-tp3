@@ -9,10 +9,10 @@
  * @param server_address Server address.
  * @param port Port or service.
  */
-TP3::Versioner::Versioner(IO::Comm& comm) : comm(comm) {
+Client::Versioner::Versioner(IO::Comm& comm) : comm(comm) {
 }
 
-TP3::Versioner::~Versioner() {
+Client::Versioner::~Versioner() {
 }
 
 /**
@@ -21,12 +21,12 @@ TP3::Versioner::~Versioner() {
  * @param file_name Name of the file to push.
  * @param hash File hash.
  */
-void TP3::Versioner::push(const std::string& file_name,
-                          const std::string& hash) {
+void Client::Versioner::push(const std::string& file_name,
+                             const std::string& hash) {
     const uint8_t pull_cmd_id = 1;
 
     if (access(file_name.c_str(), F_OK) == -1) {
-        throw TP3::Error{"Error: archivo inexistente."};
+        throw Error::Error{"Error: archivo inexistente."};
     }
 
     /* writes the command ID */
@@ -43,7 +43,7 @@ void TP3::Versioner::push(const std::string& file_name,
         case IO::Response::OK:
             break;
         default:
-            throw TP3::Error{"Push: codigo de retorno invalido"};
+            throw Error::Error{"Push: codigo de retorno invalido"};
     }
 
     std::ifstream file{file_name, std::ios::binary};
@@ -55,7 +55,7 @@ void TP3::Versioner::push(const std::string& file_name,
  *
  * @param tag Name of the tag to pull.
  */
-void TP3::Versioner::pull(const std::string& tag) {
+void Client::Versioner::pull(const std::string& tag) {
     const uint8_t pull_cmd_id = 3;
 
     /* writes the command ID */
@@ -70,9 +70,9 @@ void TP3::Versioner::pull(const std::string& tag) {
             /* continues the operation */
             break;
         case IO::Response::Error:
-            throw TP3::Error{"Error: tag/hash incorrecto"};
+            throw Error::Error{"Error: tag/hash incorrecto"};
         default:
-            throw TP3::Error{"Pull: codigo de retorno invalido"};
+            throw Error::Error{"Pull: codigo de retorno invalido"};
     }
 
     /* gets the number of files in the tag */
@@ -95,8 +95,8 @@ void TP3::Versioner::pull(const std::string& tag) {
  * @param tag The tag name.
  * @param hashes The list of hashes to include in the tag.
  */
-void TP3::Versioner::tag(const std::string& tag,
-                         std::vector<std::string>& hashes) {
+void Client::Versioner::tag(const std::string& tag,
+                            std::vector<std::string>& hashes) {
     const uint8_t tag_cmd_id = 2;
 
     this->comm << tag_cmd_id << hashes.size() << tag;
@@ -111,8 +111,8 @@ void TP3::Versioner::tag(const std::string& tag,
         case IO::Response::OK:
             break;
         case IO::Response::Error:
-            throw TP3::Error{"Error: tag/hash incorrecto"};
+            throw Error::Error{"Error: tag/hash incorrecto"};
         default:
-            throw TP3::Error{"Tag: codigo de retorno invalido"};
+            throw Error::Error{"Tag: codigo de retorno invalido"};
     }
 }

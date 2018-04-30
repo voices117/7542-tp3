@@ -4,7 +4,7 @@
 #include <exception>
 #include <string>
 
-namespace TP3 {
+namespace Error {
 class Error : public std::exception {
    public:
     Error(const char* fmt, ...);
@@ -16,7 +16,7 @@ class Error : public std::exception {
     std::string message;
 };
 
-class Exists : public TP3::Error {
+class Exists : public Error {
    public:
     Exists(const std::string& resource)
         : Error("%s already exists", resource.c_str()) {
@@ -25,7 +25,7 @@ class Exists : public TP3::Error {
     }
 };
 
-class NotFound : public TP3::Error {
+class NotFound : public Error {
    public:
     NotFound(const std::string& resource)
         : Error("%s not found", resource.c_str()) {
@@ -33,6 +33,6 @@ class NotFound : public TP3::Error {
     ~NotFound() {
     }
 };
-}  // namespace TP3
+}  // namespace Error
 
 #endif

@@ -31,7 +31,7 @@ Server::Versioner::Versioner(const std::string& file_name)
             }
             this->tag_index.add(name, hashes);
         } else {
-            throw TP3::Error{"Unexpected type %s", type.c_str()};
+            throw Error::Error{"Unexpected type %s", type.c_str()};
         }
     }
 }
@@ -65,7 +65,7 @@ void Server::Versioner::push(IO::Comm& comm) {
         /* reads the file */
         std::ofstream file{hash, std::ios::binary};
         comm >> file;
-    } catch (const TP3::Exists& e) {
+    } catch (const Error::Exists& e) {
         comm << IO::Response::Error;
         this->file_index.remove_file(filename, hash);
     }
@@ -97,7 +97,7 @@ void Server::Versioner::pull(IO::Comm& comm) {
             std::ifstream file{hash, std::ios::binary};
             comm << file;
         }
-    } catch (const TP3::NotFound& e) {
+    } catch (const Error::NotFound& e) {
         comm << IO::Response::Error;
     }
 }
@@ -142,7 +142,7 @@ void Server::Versioner::tag(IO::Comm& comm) {
  *
  * @param client The newly connected client.
  */
-void Server::Versioner::operator()(TP3::Socket&& client) {
+void Server::Versioner::operator()(IO::Socket&& client) {
     try {
         IO::CommSocket comm{std::move(client)};
         uint8_t cmd_id;

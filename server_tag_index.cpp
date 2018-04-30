@@ -17,7 +17,7 @@ const std::set<std::string>& Server::TagIndex::get_hashes(
     try {
         return this->hashes.at(tag);
     } catch (const std::out_of_range& e) {
-        throw TP3::NotFound{tag};
+        throw Error::NotFound{tag};
     }
 }
 
@@ -31,7 +31,7 @@ void Server::TagIndex::add(const std::string& tag,
                            const std::set<std::string>& hashes) {
     /* checks if the tag already exists */
     if (this->hashes.find(tag) != this->hashes.end()) {
-        throw TP3::Exists{tag};
+        throw Error::Exists{tag};
     }
 
     /* inserts the hashes into the tag */

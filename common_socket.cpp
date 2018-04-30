@@ -13,18 +13,18 @@
 #define _POSIX_C_SOURCE 200112L
 #endif
 
-TP3::Socket::Socket() {
+IO::Socket::Socket() {
     this->fd = socket(AF_INET, SOCK_STREAM, 0);
     if (this->fd == -1) {
-        throw TP3::Error{"Error al crear socket: %s", strerror(errno)};
+        throw Error::Error{"Error al crear socket: %s", strerror(errno)};
     }
 }
 
-TP3::Socket::Socket(Socket&& other) {
+IO::Socket::Socket(Socket&& other) {
     std::swap(this->fd, other.fd);
 }
 
-TP3::Socket::~Socket() {
+IO::Socket::~Socket() {
     /* checks if the socket has to be released */
     if (this->fd < 0) {
         return;
@@ -39,7 +39,7 @@ TP3::Socket::~Socket() {
  *
  * @param fd File descriptor.
  */
-TP3::Socket::Socket(int fd) {
+IO::Socket::Socket(int fd) {
     this->fd = fd;
 }
 
@@ -48,7 +48,7 @@ TP3::Socket::Socket(int fd) {
  *
  * @param port Service/port to bind the socket to.
  */
-void TP3::Socket::bind(const std::string& port) {
+void IO::Socket::bind(const std::string& port) {
     /* sets the hints */
     struct addrinfo hints;
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -60,7 +60,7 @@ void TP3::Socket::bind(const std::string& port) {
     int rv = getaddrinfo(NULL, port.c_str(), &hints, &ptr);
     if (rv != 0) {
         freeaddrinfo(ptr);
-        throw TP3::Error{"getaddrinfo: %s", gai_strerror(rv)};
+        throw Error::Error{"getaddrinfo: %s", gai_strerror(rv)};
     }
 
     /* avoids time waits */
@@ -68,13 +68,13 @@ void TP3::Socket::bind(const std::string& port) {
     if (setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val)) ==
         -1) {
         freeaddrinfo(ptr);
-        throw TP3::Error{"setsockopt: %s", strerror(errno)};
+        throw Error::Error{"setsockopt: %s", strerror(errno)};
     }
 
     /* binds the socket */
     if (::bind(this->fd, ptr->ai_addr, ptr->ai_addrlen) == -1) {
         freeaddrinfo(ptr);
-        throw TP3::Error{"bind: %s", strerror(errno)};
+        throw Error::Error{"bind: %s", strerror(errno)};
     }
 
     freeaddrinfo(ptr);
@@ -83,9 +83,9 @@ void TP3::Socket::bind(const std::string& port) {
 /**
  * @brief Sets a socket to passive mode.
  */
-void TP3::Socket::listen() {
+void IO::Socket::listen() {
     if (::listen(this->fd, 10) == -1) {
-        throw TP3::Error{"listen: %s", strerror(errno)};
+        throw Error::Error{"listen: %s", strerror(errno)};
     }
 }
 
@@ -96,7 +96,7 @@ void TP3::Socket::listen() {
  * @param address Address to connect to.
  * @param port The service (or port as a string).
  */
-void TP3::Socket::connect(const std::string& address, const std::string& port) {
+void IO::Socket::connect(const std::string& address, const std::string& port) {
     /* sets the hints for the required protocol */
     struct addrinfo hints;
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -108,7 +108,7 @@ void TP3::Socket::connect(const std::string& address, const std::string& port) {
     struct addrinfo* result;
     int rv = getaddrinfo(address.c_str(), port.c_str(), &hints, &result);
     if (rv != 0) {
-        throw TP3::Error{"getaddrinfo: %s", gai_strerror(rv)};
+        throw Error::Error{"getaddrinfo: %s", gai_strerror(rv)};
     }
 
     /* searches through the addresses list */
@@ -122,7 +122,7 @@ void TP3::Socket::connect(const std::string& address, const std::string& port) {
 
     /* if it reached this point, it means that it couldn't connect */
     freeaddrinfo(result);
-    throw TP3::Error{"No se pudo conectar el socket"};
+    throw Error::Error{"No se pudo conectar el socket"};
 }
 
 /**
@@ -131,7 +131,7 @@ void TP3::Socket::connect(const std::string& address, const std::string& port) {
  *
  * @return Client socket.
  */
-TP3::Socket TP3::Socket::accept() {
+IO::Socket IO::Socket::accept() {
     struct sockaddr_in cli_addr = {0};
     size_t addr_size = sizeof(struct sockaddr_in);
 
@@ -140,21 +140,21 @@ TP3::Socket TP3::Socket::accept() {
     if (client_fd == -1) {
         if (errno == EINVAL) {
             /* the socket was probably shutdown to interrupt the accept */
-            throw TP3::Interrupted{};
+            throw IO::Interrupted{};
         } else {
-            throw TP3::Error{"accept: %s", strerror(errno)};
+            throw Error::Error{"accept: %s", strerror(errno)};
         }
     }
 
     /* creates and returns the client socket */
-    return TP3::Socket{client_fd};
+    return IO::Socket{client_fd};
 }
 
 /**
  * @brief Forces a socket shutdown.
  *
  */
-void TP3::Socket::shutdown() {
+void IO::Socket::shutdown() {
     ::shutdown(this->fd, SHUT_RDWR);
 }
 
@@ -164,7 +164,7 @@ void TP3::Socket::shutdown() {
  * @param data Pointer to the data buffer.
  * @param size Size of the buffer.
  */
-void TP3::Socket::write(const void* data, std::size_t size) {
+void IO::Socket::write(const void* data, std::size_t size) {
     /* casts the data buffer to a byte array */
     auto out = static_cast<const unsigned char*>(data);
     size_t total_bytes_written = 0;
@@ -172,7 +172,7 @@ void TP3::Socket::write(const void* data, std::size_t size) {
         ssize_t bytes_written = send(this->fd, out + total_bytes_written,
                                      size - total_bytes_written, MSG_NOSIGNAL);
         if (bytes_written <= 0) {
-            throw TP3::Error{"send: %s", strerror(errno)};
+            throw Error::Error{"send: %s", strerror(errno)};
         }
 
         total_bytes_written += bytes_written;
@@ -186,10 +186,10 @@ void TP3::Socket::write(const void* data, std::size_t size) {
  * @param size Bytes to read.
  * @return Bytes written into the buffer.
  */
-ssize_t TP3::Socket::read(void* data, std::size_t size) {
+ssize_t IO::Socket::read(void* data, std::size_t size) {
     ssize_t bytes_read = recv(this->fd, data, size, MSG_WAITALL);
     if (bytes_read < 0) {
-        throw TP3::Error{"recv: %s", strerror(errno)};
+        throw Error::Error{"recv: %s", strerror(errno)};
     }
     return bytes_read;
 }

@@ -8,7 +8,7 @@ namespace IO {
 class CommSocket : public Comm {
    public:
     CommSocket(const std::string& address, const std::string& service);
-    CommSocket(TP3::Socket&& socket);
+    CommSocket(Socket&& socket);
     ~CommSocket();
 
     /* overrides */
@@ -29,7 +29,7 @@ class CommSocket : public Comm {
     virtual Comm& operator>>(std::ofstream& file) override;
 
    private:
-    TP3::Socket socket;
+    Socket socket;
 };
 }  // namespace IO
 

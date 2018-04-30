@@ -9,7 +9,7 @@
  * @param fmt printf-like format string.
  * @param ... Arguments that correspond to `fmt`.
  */
-TP3::Error::Error(const char* fmt, ...) {
+Error::Error::Error(const char* fmt, ...) {
     va_list args, args_copy;
     va_start(args, fmt);
     va_copy(args_copy, args);
@@ -29,7 +29,7 @@ TP3::Error::Error(const char* fmt, ...) {
     }
 }
 
-TP3::Error::~Error() {
+Error::Error::~Error() {
 }
 
 /**
@@ -37,6 +37,6 @@ TP3::Error::~Error() {
  *
  * @return Exception message.
  */
-const char* TP3::Error::what() const noexcept {
+const char* Error::Error::what() const noexcept {
     return this->message.c_str();
 }

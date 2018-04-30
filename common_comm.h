@@ -14,9 +14,9 @@ enum class Response { OK, Error };
 enum class Action { Push, Pull, Tag };
 
 /** Communication errors. */
-class CommError : public TP3::Error {
+class CommError : public Error::Error {
    public:
-    CommError(const std::string& message) : TP3::Error(message.c_str()) {
+    CommError(const std::string& message) : Error::Error(message.c_str()) {
     }
     ~CommError() {
     }

@@ -5,8 +5,8 @@
 #include <string>
 #include "common_error.h"
 
-namespace TP3 {
-class Interrupted : public Error {
+namespace IO {
+class Interrupted : public Error::Error {
    public:
     Interrupted() : Error("socket interrupted") {
     }
@@ -44,6 +44,6 @@ class Socket {
     /** File descriptor. */
     int fd{-1};
 };
-}  // namespace TP3
+}  // namespace IO
 
 #endif
