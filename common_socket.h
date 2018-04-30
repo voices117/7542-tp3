@@ -26,15 +26,6 @@ class Socket {
     /** operators */
     Socket& operator=(Socket& other) = delete;
 
-    Socket& operator<<(uint8_t c);
-    Socket& operator<<(uint32_t i);
-    Socket& operator<<(const char* s);
-    Socket& operator<<(const std::string& s);
-
-    Socket& operator>>(uint8_t& c);
-    Socket& operator>>(uint32_t& i);
-    Socket& operator>>(std::string& s);
-
    private:
     /** Private constructor. */
     Socket(int fd);
