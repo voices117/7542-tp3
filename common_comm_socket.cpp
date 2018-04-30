@@ -74,7 +74,7 @@ IO::Comm& IO::CommSocket::operator<<(uint32_t i) {
  */
 IO::Comm& IO::CommSocket::operator<<(std::size_t i) {
     if (i > __UINT32_MAX__) {
-        throw TP3::Error{"Cannot fit into uint32_t: %zu", i};
+        throw TP3::Error{"size_t demasiado grande"};
     }
     return *this << static_cast<uint32_t>(i);
 }
@@ -120,7 +120,7 @@ IO::Comm& IO::CommSocket::operator<<(const std::string& s) {
  */
 IO::Comm& IO::CommSocket::operator>>(uint8_t& c) {
     if (this->read(&c, sizeof(c)) != sizeof(c)) {
-        throw TP3::Error{"Error en la lectura de u8"};
+        throw IO::CommError{"Error en la lectura de u8"};
     }
     return *this;
 }
@@ -143,7 +143,7 @@ IO::Comm& IO::CommSocket::operator>>(IO::Response& r) {
             r = IO::Response::Error;
             break;
         default:
-            throw TP3::Error{"Unexpected response type"};
+            throw TP3::Error{"Valor de respuesta invalido"};
     }
 
     return *this;
@@ -160,7 +160,7 @@ IO::Comm& IO::CommSocket::operator>>(uint32_t& i) {
     /* reads from the Comm in network order */
     uint32_t tmp;
     if (this->read(&tmp, sizeof(tmp)) != sizeof(i)) {
-        throw TP3::Error{"Error en la lectura de u32"};
+        throw IO::CommError{"Error en la lectura de u32"};
     }
 
     /* converts to host order and sets the output */
@@ -184,7 +184,7 @@ IO::Comm& IO::CommSocket::operator>>(std::string& s) {
 
     /* gets the actual content */
     if (this->read(&s.front(), len) != len) {
-        throw TP3::Error{"Error en la lectura de string"};
+        throw IO::CommError{"Error en la lectura de string"};
     }
     return *this;
 }

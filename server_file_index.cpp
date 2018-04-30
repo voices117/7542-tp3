@@ -49,6 +49,22 @@ void TP3::FileIndex::insert_file(const std::string& name,
 }
 
 /**
+ * @brief Removes a file/hash from the index.
+ *
+ * @param name File name.
+ * @param hash Hash.
+ */
+void TP3::FileIndex::remove_file(const std::string& name,
+                                 const std::string& hash) {
+    if (this->exists(hash)) {
+        this->hashes[name].erase(hash);
+    }
+    if (this->files.find(hash) != this->files.end()) {
+        this->files.erase(hash);
+    }
+}
+
+/**
  * @brief Gets the name of the file that corresponds the given hash.
  *
  * @param hash Hash to obtain the file name.

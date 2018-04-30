@@ -18,6 +18,7 @@ class FileIndex {
 
     bool exists(const std::string& hash);
     void insert_file(const std::string& name, const std::string& hash);
+    void remove_file(const std::string& name, const std::string& hash);
     const std::string& get_file_name(const std::string& hash) const;
 
    private:

@@ -18,8 +18,6 @@ int main(int argc, const char* argv[]) {
 
     try {
         IO::CommSocket comm{ip, service};
-
-        /* starts the versioner */
         TP3::Versioner v{comm};
 
         /* selects the appropriate action from the command line arguments */

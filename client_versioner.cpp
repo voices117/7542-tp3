@@ -1,6 +1,6 @@
 #include "client_versioner.h"
+#include <unistd.h>
 #include <fstream>
-#include <iostream>  // TODO: remove
 #include <limits>
 
 /**
@@ -24,6 +24,10 @@ TP3::Versioner::~Versioner() {
 void TP3::Versioner::push(const std::string& file_name,
                           const std::string& hash) {
     const uint8_t pull_cmd_id = 1;
+
+    if (access(file_name.c_str(), F_OK) == -1) {
+        throw TP3::Error{"Error: archivo inexistente."};
+    }
 
     /* writes the command ID */
     this->comm << pull_cmd_id << file_name << hash;

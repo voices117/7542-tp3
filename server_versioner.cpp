@@ -62,6 +62,7 @@ void Server::Versioner::push(IO::Comm& comm) {
         comm >> file;
     } catch (const TP3::Exists& e) {
         comm << IO::Response::Error;
+        this->file_index.remove_file(filename, hash);
     }
 }
 
@@ -156,6 +157,8 @@ void Server::Versioner::operator()(TP3::Socket&& client) {
                 std::cerr << "Invalid ID " << cmd_id << std::endl;
                 break;
         }
+    } catch (const IO::CommError& e) {
+        /* if the client closed the connection nothing is done */
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }

@@ -4,10 +4,23 @@
 #include <cinttypes>
 #include <fstream>
 #include <string>
+#include "common_error.h"
 
 namespace IO {
 /** Enums representing the server responses. */
 enum class Response { OK, Error };
+
+/** Valid actions. */
+enum class Action { Push, Pull, Tag };
+
+/** Communication errors. */
+class CommError : public TP3::Error {
+   public:
+    CommError(const std::string& message) : TP3::Error(message.c_str()) {
+    }
+    ~CommError() {
+    }
+};
 
 /** Interface that the communication objects must implement. */
 class Comm {
