@@ -14,6 +14,11 @@ class Server {
 
     /** API */
     template <typename Functor>
+
+    /** Receives a functor that expects a parameter Socket as an rvalue.
+     *  The functor is executed when a client connects and is passed that
+     *  client's socket.
+     */
     void handle_client(Functor& handler) {
         /* blocks until a client connects to the server */
         IO::Socket client = this->socket.accept();
