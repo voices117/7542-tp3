@@ -11,7 +11,7 @@ class Versioner {
    public:
     Versioner();
     Versioner(Versioner&& other);
-    Versioner(std::ifstream& file);
+    Versioner(const std::string& file_name);
     ~Versioner();
 
     Versioner& operator=(Versioner& other) = delete;
@@ -21,12 +21,16 @@ class Versioner {
     void pull(IO::Comm& comm);
     void tag(IO::Comm& comm);
 
+    void save(std::ofstream& file);
+
    private:
     TP3::FileIndex file_index;
     TagIndex tag_index;
 
     std::mutex mutex;
     std::condition_variable cv;
+
+    std::string index_file_name;
 
     int readers{true};
 };

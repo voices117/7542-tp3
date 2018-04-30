@@ -7,7 +7,10 @@
 Server::Versioner::Versioner() {
 }
 
-Server::Versioner::Versioner(std::ifstream& file) {
+Server::Versioner::Versioner(const std::string& file_name)
+    : index_file_name(file_name) {
+    std::ifstream file{file_name};
+
     /* reads the files */
     while (file) {
         std::string type, name, hash;
@@ -34,6 +37,8 @@ Server::Versioner::Versioner(std::ifstream& file) {
 }
 
 Server::Versioner::~Versioner() {
+    std::ofstream file{this->index_file_name};
+    this->save(file);
 }
 
 /**
@@ -161,5 +166,30 @@ void Server::Versioner::operator()(TP3::Socket&& client) {
         /* if the client closed the connection nothing is done */
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
+    }
+}
+
+/**
+ * @brief Saves the index in a file.
+ *
+ * @param file File to save the index to.
+ */
+void Server::Versioner::save(std::ofstream& file) {
+    /* writes the files */
+    for (auto& pair : this->file_index) {
+        file << "f " << pair.first << " ";
+        for (const std::string& hash : pair.second) {
+            file << hash << " ";
+        }
+        file << ";" << std::endl;
+    }
+
+    /* writes the tags */
+    for (auto& pair : this->tag_index) {
+        file << "t " << pair.first << " ";
+        for (const std::string& hash : pair.second) {
+            file << hash << " ";
+        }
+        file << ";" << std::endl;
     }
 }

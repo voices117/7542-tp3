@@ -11,15 +11,23 @@
 namespace TP3 {
 class FileIndex {
    public:
+    using const_iterator =
+        std::map<std::string, std::set<std::string>>::const_iterator;
+
     FileIndex();
     ~FileIndex();
 
-    void swap(TP3::FileIndex& other);
-
-    bool exists(const std::string& hash);
+    /** api */
     void insert_file(const std::string& name, const std::string& hash);
     void remove_file(const std::string& name, const std::string& hash);
+
+    /** query */
+    bool exists(const std::string& hash);
     const std::string& get_file_name(const std::string& hash) const;
+
+    /** iterators */
+    const_iterator begin() const;
+    const_iterator end() const;
 
    private:
     /* maps the file name to a group of hashes */

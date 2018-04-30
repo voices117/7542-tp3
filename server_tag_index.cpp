@@ -7,16 +7,6 @@ Server::TagIndex::~TagIndex() {
 }
 
 /**
- * @brief Implements the swap for this class.
- *
- * @param l Left operand.
- * @param r Right operand.
- */
-void Server::TagIndex::swap(TagIndex& l, TagIndex& r) {
-    std::swap(l.hashes, r.hashes);
-}
-
-/**
  * @brief Gets the list of hashes associated to a given tag.
  *
  * @param tag Tag to query.
@@ -46,4 +36,22 @@ void Server::TagIndex::add(const std::string& tag,
 
     /* inserts the hashes into the tag */
     this->hashes[tag].insert(hashes.begin(), hashes.end());
+}
+
+/**
+ * @brief Returns an iterator to the tags and associated hashes.
+ *
+ * @return Iterator to the set of hashes for each tag.
+ */
+Server::TagIndex::const_iterator Server::TagIndex::begin() const {
+    return this->hashes.begin();
+}
+
+/**
+ * @brief Last iterator.
+ *
+ * @return Last iterator.
+ */
+Server::TagIndex::const_iterator Server::TagIndex::end() const {
+    return this->hashes.end();
 }

@@ -8,17 +8,6 @@ TP3::FileIndex::~FileIndex() {
 }
 
 /**
- * @brief Swap implementation.
- *
- * @param l Left operand.
- * @param r Right operand.
- */
-void TP3::FileIndex::swap(TP3::FileIndex& other) {
-    std::swap(this->hashes, other.hashes);
-    std::swap(this->files, other.files);
-}
-
-/**
  * @brief Checks if a given hash is already added to the inedx.
  *
  * @param hash Hash to check.
@@ -73,4 +62,22 @@ void TP3::FileIndex::remove_file(const std::string& name,
 const std::string& TP3::FileIndex::get_file_name(
     const std::string& hash) const {
     return this->files.at(hash);
+}
+
+/**
+ * @brief Returns an iterator to the files and associated hashes.
+ *
+ * @return Iterator to the set of hashes for each file.
+ */
+TP3::FileIndex::const_iterator TP3::FileIndex::begin() const {
+    return this->hashes.begin();
+}
+
+/**
+ * @brief Last iterator.
+ *
+ * @return Last iterator.
+ */
+TP3::FileIndex::const_iterator TP3::FileIndex::end() const {
+    return this->hashes.end();
 }

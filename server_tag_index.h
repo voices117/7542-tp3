@@ -9,13 +9,19 @@
 namespace Server {
 class TagIndex {
    public:
+    using const_iterator =
+        std::map<std::string, std::set<std::string>>::const_iterator;
+
     TagIndex();
     ~TagIndex();
 
-    void swap(TagIndex& l, TagIndex& r);
-
+    /** api */
     const std::set<std::string>& get_hashes(const std::string& tag) const;
     void add(const std::string& tag, const std::set<std::string>& hashes);
+
+    /** iterators */
+    const_iterator begin() const;
+    const_iterator end() const;
 
    private:
     std::map<std::string, std::set<std::string>> hashes;
