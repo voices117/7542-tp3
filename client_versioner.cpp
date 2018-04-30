@@ -35,7 +35,7 @@ void TP3::Versioner::push(const std::string& file_name,
     switch (response) {
         case IO::Response::Error:
             /* the error means that the hash already exists, so it's a no op */
-            break;
+            return;
         case IO::Response::OK:
             break;
         default:

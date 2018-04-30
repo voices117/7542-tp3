@@ -29,7 +29,6 @@ TP3::Socket::~Socket() {
     if (this->fd < 0) {
         return;
     }
-
     shutdown(this->fd, SHUT_RDWR);
     close(this->fd);
     this->fd = -1;

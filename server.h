@@ -16,12 +16,10 @@ class Server {
     void handle_client(Functor& handler) {
         /* blocks until a client connects to the server */
         TP3::Socket client = this->socket.accept();
-        handler(std::move(client));
 
         /* calls the client handler in a new thread */
-        // TODO: make multithreaded
-        // auto action = [client, handler] { handler(client); };
-        // this->handlers.push_back(std::thread(action));
+        std::thread worker{std::ref(handler), std::move(client)};
+        this->handlers.push_back(std::move(worker));
     }
 
    private:
