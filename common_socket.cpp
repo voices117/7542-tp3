@@ -29,7 +29,7 @@ TP3::Socket::~Socket() {
     if (this->fd < 0) {
         return;
     }
-    shutdown(this->fd, SHUT_RDWR);
+    this->shutdown();
     close(this->fd);
     this->fd = -1;
 }
@@ -138,11 +138,24 @@ TP3::Socket TP3::Socket::accept() {
     int client_fd =
         ::accept(this->fd, (struct sockaddr*)&cli_addr, (socklen_t*)&addr_size);
     if (client_fd == -1) {
-        throw TP3::Error{"accept: %s", strerror(errno)};
+        if (errno == EINVAL) {
+            /* the socket was probably shutdown to interrupt the accept */
+            throw TP3::Interrupted{};
+        } else {
+            throw TP3::Error{"accept: %s", strerror(errno)};
+        }
     }
 
     /* creates and returns the client socket */
     return TP3::Socket{client_fd};
+}
+
+/**
+ * @brief Forces a socket shutdown.
+ *
+ */
+void TP3::Socket::shutdown() {
+    ::shutdown(this->fd, SHUT_RDWR);
 }
 
 /**

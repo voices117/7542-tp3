@@ -3,8 +3,17 @@
 
 #include <cinttypes>
 #include <string>
+#include "common_error.h"
 
 namespace TP3 {
+class Interrupted : public Error {
+   public:
+    Interrupted() : Error("socket interrupted") {
+    }
+    ~Interrupted() {
+    }
+};
+
 class Socket {
    public:
     Socket();
@@ -22,6 +31,9 @@ class Socket {
 
     /** Client */
     void connect(const std::string& address, const std::string& port);
+
+    /** Others */
+    void shutdown();
 
     /** operators */
     Socket& operator=(Socket& other) = delete;

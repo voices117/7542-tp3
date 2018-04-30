@@ -9,14 +9,15 @@ int main(int argc, const char* argv[]) {
     }
 
     try {
-        std::ifstream file{argv[2]};
-        Server::Versioner versioner{file};
+        Server::Versioner versioner{argv[2]};
         Server::Server server{argv[1]};
 
-        bool quit = false;
-        while (!quit) {
+        /* runs until accept is interrupted */
+        while (true) {
             server.handle_client(versioner);
         }
+    } catch (const TP3::Interrupted& e) {
+        /* this exception means that the server must quit */
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
     } catch (...) {

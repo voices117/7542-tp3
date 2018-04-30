@@ -1,6 +1,7 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
+#include <atomic>
 #include <thread>
 #include <vector>
 #include "common_socket.h"
@@ -27,6 +28,10 @@ class Server {
     TP3::Socket socket;
     /** Internal array of client handlers */
     std::vector<std::thread> handlers;
+    /** Thread that waits for the exit signal. */
+    std::thread exit_thread;
+
+    void exit_handler();
 };
 }  // namespace Server
 
