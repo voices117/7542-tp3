@@ -3,6 +3,7 @@
 
 #include <string>
 #include "common_comm_socket.h"
+#include "common_rw_lock.h"
 #include "common_socket.h"
 #include "server_file_index.h"
 #include "server_tag_index.h"
@@ -28,12 +29,9 @@ class Versioner {
     FileIndex file_index;
     TagIndex tag_index;
 
-    std::mutex mutex;
-    std::condition_variable cv;
-
     std::string index_file_name;
 
-    int readers{true};
+    Concurrency::RWLock lock;
 };
 }  // namespace Server
 

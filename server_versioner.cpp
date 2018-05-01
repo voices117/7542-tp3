@@ -5,6 +5,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "common_rw_lock.h"
 
 Server::Versioner::Versioner() {
 }
@@ -59,9 +60,7 @@ void Server::Versioner::push(IO::Comm& comm) {
     /* reads the cmd data */
     comm >> filename >> hash;
 
-    /* we only needs to check for readers because writers lock the mutex until
-     * done */
-    std::unique_lock<std::mutex> lock(this->mutex);
+    Concurrency::WriteLock lock(this->lock);
 
     try {
         this->file_index.insert_file(filename, hash);
@@ -87,7 +86,8 @@ void Server::Versioner::push(IO::Comm& comm) {
  */
 void Server::Versioner::pull(IO::Comm& comm) {
     try {
-        std::unique_lock<std::mutex> lock(this->mutex);
+        /* pull only requires read access */
+        Concurrency::ReadLock lock(this->lock);
 
         /* reads the tag name */
         std::string tag;
@@ -121,7 +121,7 @@ void Server::Versioner::tag(IO::Comm& comm) {
     std::set<std::string> hashes;
 
     try {
-        std::unique_lock<std::mutex> lock(this->mutex);
+        Concurrency::WriteLock lock(this->lock);
 
         comm >> num_hashes >> name;
         for (uint32_t i = 0; i < num_hashes; i++) {
