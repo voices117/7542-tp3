@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
+#include <set>
+#include <string>
 #include <vector>
 
 Server::Versioner::Versioner() {
@@ -72,7 +74,9 @@ void Server::Versioner::push(IO::Comm& comm) {
         comm >> file;
     } catch (const Error::Exists& e) {
         comm << IO::Response::Error;
+    } catch (...) {
         this->file_index.remove_file(filename, hash);
+        throw;
     }
 }
 
@@ -92,8 +96,7 @@ void Server::Versioner::pull(IO::Comm& comm) {
         /* gets the associated hashes */
         const auto& hashes = this->tag_index.get_hashes(tag);
 
-        comm << IO::Response::OK;
-        comm << hashes.size();
+        comm << IO::Response::OK << static_cast<uint32_t>(hashes.size());
 
         for (const std::string& hash : hashes) {
             comm << this->file_index.get_file_name(hash);

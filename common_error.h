@@ -18,7 +18,7 @@ class Error : public std::exception {
 
 class Exists : public Error {
    public:
-    Exists(const std::string& resource)
+    explicit Exists(const std::string& resource)
         : Error("%s already exists", resource.c_str()) {
     }
     ~Exists() {
@@ -27,7 +27,7 @@ class Exists : public Error {
 
 class NotFound : public Error {
    public:
-    NotFound(const std::string& resource)
+    explicit NotFound(const std::string& resource)
         : Error("%s not found", resource.c_str()) {
     }
     ~NotFound() {

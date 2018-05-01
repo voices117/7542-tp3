@@ -1,6 +1,7 @@
 #ifndef SERVER_VERSIONER_H_
 #define SERVER_VERSIONER_H_
 
+#include <string>
 #include "common_comm_socket.h"
 #include "common_socket.h"
 #include "server_file_index.h"
@@ -10,8 +11,8 @@ namespace Server {
 class Versioner {
    public:
     Versioner();
-    Versioner(Versioner&& other);
-    Versioner(const std::string& file_name);
+    explicit Versioner(Versioner&& other);
+    explicit Versioner(const std::string& file_name);
     ~Versioner();
 
     Versioner& operator=(Versioner& other) = delete;

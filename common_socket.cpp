@@ -5,7 +5,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <algorithm>
 #include <cstring>
+#include <string>
 #include "common_error.h"
 
 /** use POSIX extensions */

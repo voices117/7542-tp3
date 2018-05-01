@@ -10,7 +10,7 @@
 namespace Client {
 class Versioner {
    public:
-    Versioner(IO::Comm& comm);
+    explicit Versioner(IO::Comm& comm);
     ~Versioner();
 
     void push(const std::string& file_name, const std::string& hash);

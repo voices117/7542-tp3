@@ -8,7 +8,7 @@
 
 int main(int argc, const char* argv[]) {
     if (argc < 4) {
-        std::cout << "parametros invalidos" << std::endl;
+        std::cout << "Error: argumentos invalidos." << std::endl;
         return 0;
     }
 
@@ -32,7 +32,7 @@ int main(int argc, const char* argv[]) {
             }
             v.tag(argv[4], hashes);
         } else {
-            throw Error::Error{"parametros invalidos"};
+            throw Error::Error{"Error: argumentos invalidos."};
         }
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;

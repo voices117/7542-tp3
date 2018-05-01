@@ -2,7 +2,7 @@
 #define SERVER_H_
 
 #include <atomic>
-#include <iostream>
+#include <string>
 #include <thread>
 #include <vector>
 #include "common_socket.h"
@@ -25,8 +25,7 @@ class Handler {
     }
     ~Handler() {
         this->thread.join();
-        std::cout << "killed" << std::endl;
-    };
+    }
 
     /**
      * @brief Executes the custom handler and updates the "done" status.
@@ -67,7 +66,7 @@ class Handler {
 template <typename Functor>
 class Server {
    public:
-    Server(const std::string& port) {
+    explicit Server(const std::string& port) {
         /* sets the internal socket in passive mode */
         this->socket.bind(port);
         this->socket.listen();

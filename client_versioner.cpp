@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <fstream>
 #include <limits>
+#include <string>
+#include <vector>
 
 /**
  * @brief Construct a new Versioner.
@@ -70,7 +72,7 @@ void Client::Versioner::pull(const std::string& tag) {
             /* continues the operation */
             break;
         case IO::Response::Error:
-            throw Error::Error{"Error: tag/hash incorrecto"};
+            throw Error::Error{"Error: tag/hash incorrecto."};
         default:
             throw Error::Error{"Pull: codigo de retorno invalido"};
     }
@@ -99,7 +101,7 @@ void Client::Versioner::tag(const std::string& tag,
                             std::vector<std::string>& hashes) {
     const uint8_t tag_cmd_id = 2;
 
-    this->comm << tag_cmd_id << hashes.size() << tag;
+    this->comm << tag_cmd_id << static_cast<uint32_t>(hashes.size()) << tag;
     for (std::size_t i = 0; i < hashes.size(); i++) {
         this->comm << hashes[i];
     }
@@ -111,7 +113,7 @@ void Client::Versioner::tag(const std::string& tag,
         case IO::Response::OK:
             break;
         case IO::Response::Error:
-            throw Error::Error{"Error: tag/hash incorrecto"};
+            throw Error::Error{"Error: tag/hash incorrecto."};
         default:
             throw Error::Error{"Tag: codigo de retorno invalido"};
     }

@@ -40,7 +40,7 @@ class Socket {
 
    private:
     /** Private constructor. */
-    Socket(int fd);
+    explicit Socket(int fd);
     /** File descriptor. */
     int fd{-1};
 };

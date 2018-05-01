@@ -1,5 +1,6 @@
 #include "server_file_index.h"
 #include <condition_variable>
+#include <string>
 
 Server::FileIndex::FileIndex() {
 }

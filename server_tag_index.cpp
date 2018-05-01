@@ -1,4 +1,6 @@
 #include "server_tag_index.h"
+#include <set>
+#include <string>
 
 Server::TagIndex::TagIndex() {
 }

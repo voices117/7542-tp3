@@ -2,6 +2,8 @@
 #include <arpa/inet.h>
 #include <algorithm>
 #include <cstring>
+#include <limits>
+#include <string>
 #include "common_error.h"
 
 IO::CommSocket::CommSocket(const std::string& address,
@@ -82,19 +84,6 @@ IO::Comm& IO::CommSocket::operator<<(uint32_t i) {
 /**
  * @brief Insertion operator for the Comm class.
  *
- * @param i size_t to write (in network order).
- * @return self.
- */
-IO::Comm& IO::CommSocket::operator<<(std::size_t i) {
-    if (i > __UINT32_MAX__) {
-        throw Error::Error{"size_t demasiado grande"};
-    }
-    return *this << static_cast<uint32_t>(i);
-}
-
-/**
- * @brief Insertion operator for the Comm class.
- *
  * @param s C string to write.
  * @return self.
  *
@@ -150,7 +139,7 @@ IO::Comm& IO::CommSocket::operator>>(IO::Response& r) {
 
     switch (code) {
         case 1:
-            r = IO::Response::OK;
+            r = IO ::Response::OK;
             break;
         case 0:
             r = IO::Response::Error;
@@ -196,7 +185,7 @@ IO::Comm& IO::CommSocket::operator>>(std::string& s) {
     s.resize(len);
 
     /* gets the actual content */
-    if (this->read(&s.front(), len) != len) {
+    if (this->read(&s.front(), len) != static_cast<ssize_t>(len)) {
         throw IO::CommError{"Error en la lectura de string"};
     }
     return *this;
