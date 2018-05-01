@@ -147,7 +147,7 @@ void Server::Versioner::tag(IO::Comm& comm) {
  *
  * @param client The newly connected client.
  */
-void Server::Versioner::operator()(IO::Socket&& client) {
+void Server::Versioner::operator()(IO::Socket& client) {
     try {
         IO::CommSocket comm{std::move(client)};
         uint8_t cmd_id;

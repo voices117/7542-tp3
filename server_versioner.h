@@ -15,7 +15,7 @@ class Versioner {
     ~Versioner();
 
     Versioner& operator=(Versioner& other) = delete;
-    void operator()(IO::Socket&& client);
+    void operator()(IO::Socket& client);
 
     void push(IO::Comm& comm);
     void pull(IO::Comm& comm);
