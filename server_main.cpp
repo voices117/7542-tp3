@@ -10,7 +10,7 @@ int main(int argc, const char* argv[]) {
 
     try {
         Server::Versioner versioner{argv[2]};
-        Server::Server server{argv[1]};
+        Server::Server<Server::Versioner> server{argv[1]};
 
         /* runs until accept is interrupted */
         while (true) {
